@@ -103,4 +103,44 @@ Obteniendo las contraseñas con *John the Ripper*
 
 ### 3. Shadow Password
 #### 3.1. Analizar en detalle el formato de las entradas de los dos ficheros /etc/passwd y /etc/shadow
-El fichero contiene blablabla...
+
+#### Fichero passwd
+En el fichero */etc/passwd* están registrados los usuarios del sistema. Pese a su nombre, no contiene las contraseñas ya que esto sería un agujero de seguridad demasiado obvio. Tan solo contiene alguna información del usuario.
+
+`turing:x:1001:1001::/home/turing:/bin/bash`
+
+El significado de estos campos es el siguiente:
+
+ `nombre:password:uid:gid:descripción opcional:carpeta:shell`
+ 
+ **nombre:**  nombre del usuario.
+ 
+**password:**  Una **x** indica que el password está almacenado en /etc/shadow, en el caso de ser una **!** significa que el usuario está bloqueado. De hecho, los administradores de sistemas suelen utilizar este truco para bloquear rápidamente una cuenta.
+
+**uid:**  Cada usuario posee un número identificador (*uid*). El 0 pertenece a *root* y el máximo valor es 65535. Los valores entre 100 y 999 están reservados para el sistema. Los usuarios creados habitualmente comienzan a partir de 1000. Estos valores pueden variar dependendiendo de la distribución de *Linux*.
+
+**gid:**  group id. Cada usuario tiene un id de grupo principal, pero puede pertenecer a más grupos.
+
+**carpeta:**  La carpeta */home* del usuario.  Al iniciar sesión con él será la que cargue por defecto.
+
+**shell:**  Los usuarios de servicios y usuarios con permisos limitados no deben tener shell, es decir iniciar sesión en consola, normalmente se les deja con /usr/bin/nologin o /bin/false
+ 
+#### Fichero shadow
+En el fichero */etc/shadow* se encuentran las contraseñas cifradas y alguna información o configuración relativa a las mismas. El aspecto de una entrada en el fichero es el siguiente:
+
+`turing:$6$OrqRmooe$2XSkhn1:15754:0:99999:7:::`
+
+El significado se detalla a continuación:
+
+`nombre:password cifrado:1:2:3:4:5:6`
+
+**nombre:**  Nombre del usuario.
+
+**password cifrado:** Contraseña cifrada.
+
+**1:** Días transcurridos desde 1-1-1970 donde la contraseña fue cambiada por última vez.  
+**2:** El mínimo número de días entre cambios de contraseña.  
+**3:** Días máximos de validez de la cuenta.  
+**4:** Días de aviso al usuario antes de caducar la contraseña.  
+**5:**  Días después de que una contraseña caduque para deshabiltar la cuenta  
+**6:**  Fecha de caducidad. Días desde 1-1-1970, donde la cuenta es deshabilatada y el usuario no podrá iniciar sesión.
